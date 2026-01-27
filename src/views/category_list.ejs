@@ -1,0 +1,8 @@
+<ul>
+  <% categories.forEach(category => { %>
+    <li>
+      <%= category.name %>
+      <a href="/categories/<%= category.id %>/delete">Delete</a>
+    </li>
+  <% }) %>
+</ul>

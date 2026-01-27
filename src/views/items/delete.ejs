@@ -1,0 +1,20 @@
+<h1>Delete Item</h1>
+
+<p>
+  Are you sure you want to delete
+  <strong><%= item.name %></strong>?
+</p>
+
+<p>
+  Category: <%= item.category_name %><br>
+  Quantity: <%= item.quantity %><br>
+  Price: <%= item.price ? "GH₵ " + item.price : "—" %>
+</p>
+
+<form method="POST" action="/items/<%= item.id %>/delete">
+  <button type="submit" style="color: red;">
+    Yes, delete item
+  </button>
+</form>
+
+<a href="/items">Cancel</a>

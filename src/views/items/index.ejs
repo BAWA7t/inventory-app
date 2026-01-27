@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Items</title>
+</head>
+<body>
+
+  <h1>Inventory Items</h1>
+
+  <nav>
+    <a href="/">🏠 Home</a> |
+    <a href="/categories">📂 Categories</a> |
+    <a href="/items/new">➕ Add Item</a>
+  </nav>
+
+  <hr>
+
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Category</th>
+        <th>Quantity</th>
+        <th>Price</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% items.forEach(item => { %>
+        <tr>
+          <td><%= item.name %></td>
+          <td><%= item.category_name %></td>
+          <td><%= item.quantity %></td>
+          <td>
+            <% if (item.price) { %>
+              GH₵ <%= item.price %>
+            <% } else { %>
+              —
+            <% } %>
+          </td>
+          <td>
+            <a href="/items/<%= item.id %>">👁 View</a> |
+            <a href="/items/<%= item.id %>/edit">✏️ Edit</a> |
+            <a href="/items/<%= item.id %>/delete" style="color:red;">🗑 Delete</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+
+</body>
+</html>

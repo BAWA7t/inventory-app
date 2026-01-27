@@ -1,0 +1,30 @@
+<h1>Delete Category</h1>
+
+<p>
+    Are you sure you want to delete
+    <strong><%= category.name %></strong>?
+</p>
+
+<% if (!canDelete) { %>
+    <p style="color: red;">
+        ❌ This category cannot be deleted because it contains items.
+    </p>
+
+    <ul>
+        <% items.forEach(item => { %>
+            <li><%= item.name %></li>
+        <% }) %>
+    </ul>
+
+    <a href="/categories">← Back to categories</a>
+
+    <% } else { %>
+  <form method="POST" action="/categories/<%= category.id %>/delete">
+    <button type="submit" style="color: red;">
+      Yes, delete category
+    </button>
+  </form>
+
+  <a href="/categories">Cancel</a>
+
+<% } %>
