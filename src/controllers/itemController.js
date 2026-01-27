@@ -1,50 +1,56 @@
 const pool = require("../db/pool");
 
-//Get all items
+/* ================= READ ================= */
+
 async function getAllItems(req, res) {
-  try {
-    const { rows } = await pool.query(`
-      SELECT items.*, categories.name AS category_name
-      FROM items
-      JOIN categories ON items.category_id = categories.id
-      ORDER BY items.id
-    `);
-    res.render("items/index", { items: rows }); // return array of items
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error fetching items" });
-  }
+  const { rows } = await pool.query(`
+    SELECT items.*, categories.name AS category_name
+    FROM items
+    JOIN categories ON items.category_id = categories.id
+    ORDER BY items.id
+  `);
+
+  res.render("items/index", { items: rows });
 }
 
-//Get one item by ID
 async function getItemById(req, res) {
   const { id } = req.params;
 
-  try {
-    const { rows } = await pool.query(
-      `
-      SELECT items.*, categories.name AS category_name
-      FROM items
-      JOIN categories ON items.category_id = categories.id
-      WHERE items.id = $1
-    `,
-      [id],
-    );
+  const { rows } = await pool.query(`SELECT * FROM items WHERE id = $1`, [id]);
 
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Item not found" });
-    }
-
-    res.json(rows[0]); // return single item
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Database error fetching item" });
-  }
+  res.json(rows[0]);
 }
 
-/**
- * SHOW delete confirmation
- */
+/* ================= FORMS ================= */
+
+async function newItemForm(req, res) {
+  const { rows: categories } = await pool.query(
+    "SELECT id, name FROM categories ORDER BY name",
+  );
+
+  res.render("items/new", { categories });
+}
+
+async function editItemForm(req, res) {
+  const { id } = req.params;
+
+  const { rows: items } = await pool.query(
+    "SELECT * FROM items WHERE id = $1",
+    [id],
+  );
+
+  const { rows: categories } = await pool.query(
+    "SELECT id, name FROM categories ORDER BY name",
+  );
+
+  res.render("items/edit", {
+    item: items[0],
+    categories,
+  });
+}
+
+/* ================= DELETE ================= */
+
 async function deleteItemGet(req, res) {
   const { id } = req.params;
 
@@ -56,25 +62,21 @@ async function deleteItemGet(req, res) {
     [id],
   );
 
-  const item = rows[0];
-
-  res.render("items/delete", { item });
+  res.render("items/delete", { item: rows[0] });
 }
 
-/**
- * HANDLE delete
- */
 async function deleteItemPost(req, res) {
   const { id } = req.params;
 
   await pool.query("DELETE FROM items WHERE id = $1", [id]);
-
   res.redirect("/items");
 }
 
 module.exports = {
   getAllItems,
   getItemById,
+  newItemForm,
+  editItemForm,
   deleteItemGet,
   deleteItemPost,
 };
