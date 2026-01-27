@@ -1,5 +1,10 @@
 const pool = require("./pool");
 
+async function getAllCategories() {
+  const { rows } = await pool.query("SELECT * FROM categories");
+  return rows;
+}
+
 async function getCategoryById(id) {
   const { rows } = await pool.query("SELECT * FROM categories WHERE id = $1", [
     id,
@@ -18,3 +23,10 @@ async function getItemsByCategory(categoryId) {
 async function deleteCategory(id) {
   await pool.query("DELETE FROM categories WHERE id = $1", [id]);
 }
+
+module.exports = {
+  getAllCategories,
+  getCategoryById,
+  getItemsByCategory,
+  deleteCategory,
+};
