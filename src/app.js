@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
-const categoriesRouter = require("./routes/categories");
-const itemsRouter = require("./routes/items");
+const categoriesRouter = require("./routes/categoriesRouter");
+const itemsRouter = require("./routes/itemsRouter");
 const pool = require("./db/pool");
 
 const app = express();
